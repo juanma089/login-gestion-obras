@@ -1,6 +1,6 @@
-# 🔐 Authentication and Registration API - Spring Boot
+# 🔐 API de autenticación y registro - Spring Boot
 
-This project is a REST API for user authentication and management, developed with **Spring Boot**, **JWT** for authentication, and **MySQL** as the database.
+Este proyecto es una API REST para la autenticación y gestión de usuarios, desarrollada con Spring Boot, JWT para la autenticación y MySQL como base de datos.
 
 ## Requisitos del Sistema
 
