@@ -105,6 +105,10 @@ The project is deployed on Railway. To deploy manually:
 2. Configure environment variables (`DATABASE_URL`, `JWT_SECRET`).
 3. Railway will handle the automatic deployment. 🚀
 
+4. **Access the API**
+1. Open your browser and navigate to http://localhost:8081/swagger-ui/index.html
+2. Use Postman or any other API client to test the endpoints.
+
 ---
 
 ## 📝 License
