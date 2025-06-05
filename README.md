@@ -4,9 +4,9 @@ Este proyecto es una API REST para la autenticación y gestión de usuarios, des
 
 ## Requisitos del Sistema
 
-Para ejecutar este proyecto necesitas: [1](#0-0)
+Para ejecutar este proyecto necesitas:
 
-- **Java 17+** - Requerido por la configuración del proyecto [2](#0-1)
+- **Java 17+** - Requerido por la configuración del proyecto.
 - **Maven** - Para gestión de dependencias (opcional, incluye wrapper)
 - **MySQL 8.0+** - Base de datos (opcional para desarrollo local)
 - **Git** - Para clonar el repositorio
@@ -22,7 +22,7 @@ cd login-gestion-obras
 ```
 
 ### 2. Configurar Base de Datos
-Crear `src/main/resources/application.properties` con la configuración necesaria: [3](#0-2)
+Crear `src/main/resources/application.properties` con la configuración necesaria:
 
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/my_database
@@ -41,7 +41,7 @@ spring.mail.properties.mail.smtp.ssl.trust=smtp.gmail.com
 ```
 
 ### 3. Compilar y Ejecutar
-Usando el Maven wrapper incluido: [4](#0-3)
+Usando el Maven wrapper incluido:
 
 ```bash
 ./mvnw clean install
@@ -141,7 +141,7 @@ public User signup(@Valid RegisterUserDto input) {
     // Resto del código permanece igual...
 ```
 
-2. **Modificar temporalmente la configuración de seguridad** para permitir acceso sin autenticación al endpoint `/auth/signup`: [2](#3-1)
+2. **Modificar temporalmente la configuración de seguridad** para permitir acceso sin autenticación al endpoint `/auth/signup`:
 
 Cambiar la línea 42 para incluir `/auth/signup` en los endpoints permitidos:
 `SecurityConfiguration.java:42-44`
