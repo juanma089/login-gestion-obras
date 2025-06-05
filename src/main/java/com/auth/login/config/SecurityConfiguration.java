@@ -39,10 +39,10 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/signup", "/auth/login", "/auth/send-reset-code",
+                        .requestMatchers("/auth/login", "/auth/send-reset-code",
                                 "/auth/reset-password", "/auth/verify-reset-code",
                                 "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
-                        .requestMatchers("/users/create").hasRole("ADMINISTRADOR")
+                        .requestMatchers("/auth/signup").hasRole("ADMINISTRADOR")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
