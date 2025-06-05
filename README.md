@@ -1,47 +1,29 @@
 # 🔐 Authentication and Registration API - Spring Boot
 
-This project is a REST API for user authentication and management, developed with **Spring Boot**, **JWT** for authentication, and **MySQL** as the database. It is deployed on **Railway**.
+This project is a REST API for user authentication and management, developed with **Spring Boot**, **JWT** for authentication, and **MySQL** as the database.
 
-## 🚀 Features
+## Requisitos del Sistema
 
-- User registration.
-- Login with JWT authentication.
-- Route protection with tokens.
-- Retrieve authenticated user information.
+Para ejecutar este proyecto necesitas: [1](#0-0)
 
----
+- **Java 17+** - Requerido por la configuración del proyecto [2](#0-1)
+- **Maven** - Para gestión de dependencias (opcional, incluye wrapper)
+- **MySQL 8.0+** - Base de datos (opcional para desarrollo local)
+- **Git** - Para clonar el repositorio
 
-## 🛠 Technologies Used
+## Configuración e Instalación
 
-- **Spring Boot** (Spring Security, Spring Data JPA, Spring Web)
-- **JWT (JSON Web Token)** for authentication
-- **MySQL** as the database
-- **JPA / Hibernate** for data persistence
-- **Lombok** to simplify code
-- **Maven** for dependency management
-- **Railway** for cloud deployment
-
----
-
-## 📌 Prerequisites
-
-- **Java 17+**
-- **Maven**
-- **MySQL** (Optional for local execution)
-
----
-
-## 📦 Installation and Execution
-
-1. **Clone the repository**
-```sh
-   git clone https://github.com/your-username/your-repo.git
-   cd your-repo
+### 1. Clonar el Repositorio
+```bash
+git clone https://github.com/juanma089/login-gestion-obras.git
+```
+```bash
+cd login-gestion-obras
 ```
 
-2. **Configure `application.properties`**
-   
-Create a file in `src/main/resources/application.properties` and set up the database and JWT secret:
+### 2. Configurar Base de Datos
+Crear `src/main/resources/application.properties` con la configuración necesaria: [3](#0-2)
+
 ```properties
 spring.datasource.url=jdbc:mysql://localhost:3306/my_database
 spring.datasource.username=root
@@ -58,58 +40,159 @@ spring.mail.properties.mail.smtp.starttls.required=true
 spring.mail.properties.mail.smtp.ssl.trust=smtp.gmail.com
 ```
 
-3. **Build and run**
-```sh
-   mvn clean install
-   mvn spring-boot:run
+### 3. Compilar y Ejecutar
+Usando el Maven wrapper incluido: [4](#0-3)
+
+```bash
+./mvnw clean install
+./mvnw spring-boot:run
 ```
 
----
+## Endpoints Disponibles
 
-## 🔑 Available Endpoints
+La API expone endpoints de autenticación bajo `/auth`:
 
-### 📌 Authentication
-| Method | Endpoint         | Description |
-|--------|-----------------|-------------|
-| `POST`  | `/auth/signup` | Register user |
-| `POST`  | `/auth/login`    | Log in (Returns a token) |
-| `POST`  | `/auth/send-reset-code` | Send an email with a validation code |
-| `POST`  | `/auth/reset-password`    | Requires new password, email and validation code |
+- `POST /auth/signup` - Registro de usuario
+- `POST /auth/login` - Inicio de sesión
+- `POST /auth/send-reset-code` - Envío de código de recuperación
+- `POST /auth/reset-password` - Restablecimiento de contraseña
 
+## Verificación del Despliegue
 
-### 📌 Users (Protected with JWT)
-| Method | Endpoint         | Description |
-|--------|-----------------|-------------|
-| `GET`   | `/users/me`  | Retrieve authenticated user information |
+Una vez ejecutándose, puedes verificar:
+- Swagger UI: `http://localhost:8081/swagger-ui.html`
 
----
+**Notes**
 
-## 🛡 Authentication with JWT
+El proyecto utiliza JWT para autenticación y tiene configuración CORS para desarrollo local . La aplicación principal se encuentra en `LoginApplication` y utiliza Spring Boot 3.4.3.
 
-To access protected routes, include the token in the `Authorization` header:
-```sh
-Authorization: Bearer your_token_here
+## Configuración de Base de Datos
+
+### 1. Crear el archivo de configuración
+
+Necesitas crear o editar el archivo `src/main/resources/application.properties` con la configuración de MySQL:
+
+### 2. Configuración específica de la base de datos
+
+Las propiedades principales que debes configurar son:
+
+- **`spring.datasource.url`**: URL de conexión a MySQL (formato: `jdbc:mysql://localhost:3306/nombre_base_datos`)
+- **`spring.datasource.username`**: Usuario de MySQL
+- **`spring.datasource.password`**: Contraseña del usuario
+- **`spring.jpa.hibernate.ddl-auto=update`**: Permite que Hibernate actualice automáticamente el esquema de la base de datos
+
+### 3. Preparar la base de datos
+
+1. **Instalar MySQL** (si no lo tienes)
+2. **Crear la base de datos**:
+   ```sql
+   CREATE DATABASE my_database;
+   ```
+3. **Crear usuario** (opcional):
+   ```sql
+   CREATE USER 'tu_usuario'@'localhost' IDENTIFIED BY 'tu_contraseña';
+   GRANT ALL PRIVILEGES ON my_database.* TO 'tu_usuario'@'localhost';
+   ```
+
+### 5. Verificar la configuración
+
+Una vez configurado, ejecuta:
+```bash
+./mvnw spring-boot:run
 ```
 
-Example using **cURL**:
-```sh
-curl -H "Authorization: Bearer your_token_here" -X GET http://localhost:8081/users/me
+Si la configuración es correcta, Hibernate creará automáticamente las tablas necesarias gracias a `ddl-auto=update`.
+
+**Notes**
+
+El proyecto utiliza Spring Data JPA con Hibernate para la persistencia. La configuración CORS está establecida para desarrollo local.
+
+## Modificación Temporal de la Configuración de Seguridad
+
+Este apartado es simplemente para la creacion del primer usuario admistardor.
+
+Puedes comentar temporalmente la validación de autenticación en el método `signup` de `AuthenticationServiceImpl.java:55-67`:
+
+### Pasos para la Modificación Temporal
+
+1. **Comentar la validación de autenticación** en `AuthenticationServiceImpl.signup()`:
+
+```java
+@Transactional
+public User signup(@Valid RegisterUserDto input) {
+    // Comentar temporalmente estas líneas
+    /*
+    /*Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new AccessDeniedException("Debe estar autenticado como ADMINISTRADOR para crear usuarios.");
+        }
+
+        User currentUser = (User) authentication.getPrincipal();
+
+        if (currentUser.getRole() != RoleType.ADMINISTRADOR) {
+            throw new AccessDeniedException("Solo un ADMINISTRADOR puede crear nuevos usuarios.");
+
+        if (input.getRole() != RoleType.ADMINISTRADOR) {
+            user.setAdmin(currentUser);
+        }
+        }*/
+    
+    // Resto del código permanece igual...
 ```
 
----
+2. **Modificar temporalmente la configuración de seguridad** para permitir acceso sin autenticación al endpoint `/auth/signup`: [2](#3-1)
 
-## 🚀 Deployment on Railway
+Cambiar la línea 42 para incluir `/auth/signup` en los endpoints permitidos:
+`SecurityConfiguration.java:42-44`
+```java
+.requestMatchers("/auth/signup", "/auth/login", "/auth/send-reset-code",
+        "/auth/reset-password", "/auth/verify-reset-code",
+        "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**").permitAll()
+```
 
-The project is deployed on Railway. To deploy manually:
-1. Connect the repository to Railway.
-2. Configure environment variables (`DATABASE_URL`, `JWT_SECRET`).
-3. Railway will handle the automatic deployment. 🚀
+eliminar de `SecurityConfiguration.java:45`
 
-4. **Access the API**
-1. Open your browser and navigate to `http://localhost:8081/swagger-ui/index.html`
-2. Use Postman or any other API client to test the endpoints.
+```java
+.requestMatchers("/auth/signup").hasRole("ADMINISTRADOR")
+```
+y eliminar de `AuthenticationController.java:53`
 
----
+```java
+@SecurityRequirement(name = "bearerAuth")
+```
+
+### Proceso Completo
+
+1. **Hacer las modificaciones temporales**
+2. **Compilar y ejecutar la aplicación**:
+   ```bash
+   ./mvnw clean install
+   ./mvnw spring-boot:run
+   ```
+3. **Crear el primer usuario administrador** desde el local con **swagger** usando el endpoint `http://localhost:8081/swagger-ui/index.html#/authentication-controller/register` o desde Postman `http://localhost:8081/auth/signup`:
+   ```json
+   POST /auth/signup
+   {
+     "email": "admin@example.com",
+     "password": "admin123",
+     "fullName": "Administrador Principal",
+     "role": "ADMINISTRADOR",
+     "numberID": "00000000"
+   }
+   ```
+4. **Revertir los cambios** en todos los archivos
+5. **Recompilar y reiniciar** la aplicación
+
+### Consideraciones de Seguridad
+
+- **Solo hazlo en desarrollo**: Esta modificación temporal debe hacerse únicamente en un entorno de desarrollo
+- **Revierte inmediatamente**: Una vez creado el usuario administrador, revierte los cambios de inmediato
+- **No subas los cambios**: Asegúrate de no hacer commit de estas modificaciones temporales
+
+**Notes**
+
+Esta solución es más rápida que crear un script de inicialización, pero requiere disciplina para revertir los cambios. El endpoint `/auth/signup` normalmente requiere autenticación JWT como se ve en el controlador, por lo que la modificación temporal en la configuración de seguridad es necesaria.
 
 ## 📝 License
 
