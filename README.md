@@ -93,7 +93,7 @@ Authorization: Bearer your_token_here
 
 Example using **cURL**:
 ```sh
-curl -H "Authorization: Bearer your_token_here" -X GET http://localhost:8080/users/me
+curl -H "Authorization: Bearer your_token_here" -X GET http://localhost:8081/users/me
 ```
 
 ---
